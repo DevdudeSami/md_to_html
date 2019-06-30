@@ -3,8 +3,12 @@ function interpret(input) {
 
 	let lines = input.split('\n\n')
 
+	let lineResult = ""
+
+	let bold, italic, underline, strike = false
+
 	lines.forEach(line => {
-		let lineResult = ""
+		lineResult = ""
 		let headingLevel = 0
 
 		// Split the line
@@ -14,60 +18,13 @@ function interpret(input) {
 			// Handle headings
 			if(token[0] == '#') {
 				headingLevel = token.length
+				return
 			}
-			// Single word bold
-			else if(token.slice(0,2) == '**' && token.slice(-2) == '**') {
-				lineResult += `<b>${token.slice(2,-2)}</b> `
-			}
-			// Start bold
-			else if(token.slice(0,2) == '**') {
-				lineResult += `<b>${token.slice(2)} `
-			}
-			// End bold
-			else if(token.slice(-2) == '**') {
-				lineResult += `${token.slice(0,-2)}</b> `
-			}
-			// Single word italic
-			else if(token[0] == '*' && token[token.length-1] == '*') {
-				lineResult += `<i>${token.slice(1,-1)}</i> `
-			}
-			// Start italic
-			else if(token[0] == '*') {
-				lineResult += `<i>${token.slice(1)} `
-			}
-			// End italic
-			else if(token[token.length-1] == '*') {
-				lineResult += `${token.slice(-1)}</i> `
-			}
-			// Single word strikethrough
-			else if(token.slice(0,2) == '__' && token.slice(-2) == '__') {
-				lineResult += `<s>${token.slice(2,-2)}</s> `
-			}
-			// Start strikethrough
-			else if(token.slice(0,2) == '__') {
-				lineResult += `<s>${token.slice(2)} `
-			}
-			// End strikethrough
-			else if(token.slice(-2) == '__') {
-				lineResult += `${token.slice(0,-2)}</s> `
-			}
-			// Single word underline
-			else if(token[0] == '_' && token[token.length-1] == '_') {
-				lineResult += `<u>${token.slice(1,-1)}</u> `
-			}
-			// Start underline
-			else if(token[0] == '_') {
-				lineResult += `<u>${token.slice(1)} `
-			}
-			// End underline
-			else if(token[token.length-1] == '_') {
-				lineResult += `${token.slice(-1)}</u> `
-			}
-			// Normal token
-			else {
-				lineResult += `${token} `
-			}
-		});
+
+			// Text decoration
+			lineResult += decoration(token)
+			lineResult += " "
+		})
 
 		lineResult = lineResult.slice(0,-1)
 
@@ -75,10 +32,57 @@ function interpret(input) {
 		else lineResult = `<p>${lineResult}</p>`
 
 		result += lineResult
-	});
+	})
 
 	return result
+
+	function decoration(token) {
+		let tokenResult = ""
+
+		let skip = false
+
+		token.split('').forEach((c, i) => {
+			if(skip) { skip = false; return }
+			
+			// Check italic/bold
+			if(c == "*") {
+				// bold
+				if(token[i+1] == "*") {
+					tokenResult += bold ? "</b>" : "<b>"
+					bold = !bold
+					skip = true
+				}
+				// italic
+				else {
+					tokenResult += italic ? "</i>" : "<i>"
+					italic = !italic
+				}
+			}
+			// Check underline/strikethrough
+			else if(c == "_") {
+				// strike
+				if(token[i+1] == "_") {
+					tokenResult += strike ? "</s>" : "<s>"
+					strike = !strike
+					skip = true
+				}
+				// underline
+				else {
+					tokenResult += underline ? "</u>" : "<u>"
+					underline = !underline
+				}
+			}
+			// Everything else
+			else {
+				tokenResult += c
+			}
+		})
+
+		return tokenResult
+	}
 }
+
+
 
 module.exports = interpret
 

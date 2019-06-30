@@ -41,23 +41,23 @@ describe('Headings', () => {
 
 describe('Text decoration', () => {
 	test('Italics', () => {
-		const input = "This paragraph will have *italics* ."
-		expect(interpret(input)).toBe("<p>This paragraph will have <i>italics</i> .</p>")
+		const input = "This paragraph will have *italics*."
+		expect(interpret(input)).toBe("<p>This paragraph will have <i>italics</i>.</p>")
 	})
 
 	test('Bold', () => {
-		const input = "This paragraph will have **bold** ."
-		expect(interpret(input)).toBe("<p>This paragraph will have <b>bold</b> .</p>")
+		const input = "This paragraph will have **bold**."
+		expect(interpret(input)).toBe("<p>This paragraph will have <b>bold</b>.</p>")
 	})
 
 	test('Underline', () => {
-		const input = "This paragraph will have _underline_ ."
-		expect(interpret(input)).toBe("<p>This paragraph will have <u>underline</u> .</p>")
+		const input = "This paragraph will have _underline_."
+		expect(interpret(input)).toBe("<p>This paragraph will have <u>underline</u>.</p>")
 	})
 
 	test('Struckthrough', () => {
-		const input = "This paragraph will have __struckthrough__ ."
-		expect(interpret(input)).toBe("<p>This paragraph will have <s>struckthrough</s> .</p>")
+		const input = "This paragraph will have __struckthrough__."
+		expect(interpret(input)).toBe("<p>This paragraph will have <s>struckthrough</s>.</p>")
 	})
 })
 

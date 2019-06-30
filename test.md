@@ -15,3 +15,6 @@ _Underline_
 __Struckthrough__
 
 ***Italic and bold?***
+
+Par**tially bo***ld and itali*c.
+
