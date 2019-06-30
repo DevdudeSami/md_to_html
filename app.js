@@ -1,14 +1,24 @@
 function interpret(input) {
 	let result = ""
+	let lineResult = ""
 
 	let lines = input.split('\n\n')
-
-	let lineResult = ""
 
 	let bold, italic, underline, strike = false
 
 	lines.forEach(line => {
 		lineResult = ""
+
+		if(line[0] == '-') lineResult += list(line.split('\n'))
+		else lineResult += handleLine(line)
+
+		result += lineResult
+	})
+
+	return result
+
+	function handleLine(line) {
+		let lineResult = ""
 		let headingLevel = 0
 
 		// Split the line
@@ -31,10 +41,18 @@ function interpret(input) {
 		if(headingLevel != 0) lineResult = `<h${headingLevel}>${lineResult}</h${headingLevel}>`
 		else lineResult = `<p>${lineResult}</p>`
 
-		result += lineResult
-	})
+		return lineResult
+	}
 
-	return result
+	function list(items) {
+		let listResult = "<ul>"
+
+		items.forEach(item => {
+			listResult += "<li>" + handleLine(item.slice(1)) + "</li>"
+		})
+
+		return listResult + "</ul>"
+	}
 
 	function decoration(token) {
 		let tokenResult = ""

@@ -18,3 +18,9 @@ __Struckthrough__
 
 Par**tially bo***ld and itali*c.
 
+- Will this be a list?
+- It's a list!
+- **Bold insi**de list
+- *Cool!*
+
+I can also include <b>custom HTML in here of course</b>.
