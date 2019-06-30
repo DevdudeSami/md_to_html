@@ -1,16 +1,24 @@
+const patchIdentifier = "SomeRandomPatchIdentifier213281927498jsd"
+
 function interpret(input) {
 	let result = ""
 	let lineResult = ""
 
 	let lines = input.split('\n\n')
 
-	let bold, italic, underline, strike = false
+	let bold, italic, underline, strike, link = false
+	let patch = ""
 
 	lines.forEach(line => {
 		lineResult = ""
 
-		if(line[0] == '-') lineResult += list(line.split('\n'))
+		if(line[0] == '-') lineResult += handleList(line.split('\n'))
 		else lineResult += handleLine(line)
+
+		if(patch != "") {
+			lineResult = lineResult.replace(patchIdentifier, patch)
+			patch = ""
+		}
 
 		result += lineResult
 	})
@@ -32,7 +40,7 @@ function interpret(input) {
 			}
 
 			// Text decoration
-			lineResult += decoration(token)
+			lineResult += handleToken(token)
 			lineResult += " "
 		})
 
@@ -44,7 +52,7 @@ function interpret(input) {
 		return lineResult
 	}
 
-	function list(items) {
+	function handleList(items) {
 		let listResult = "<ul>"
 
 		items.forEach(item => {
@@ -54,21 +62,32 @@ function interpret(input) {
 		return listResult + "</ul>"
 	}
 
-	function decoration(token) {
+	function handleToken(token) {
 		let tokenResult = ""
 
-		let skip = false
+		let skip = 0
+		let processingUrl = false
+		let url = ""
 
 		token.split('').forEach((c, i) => {
-			if(skip) { skip = false; return }
+			if(skip > 0) { skip -= 1; return }
 			
+			if(processingUrl) {
+				if(c == ")") {
+					patch = url
+
+					processingUrl = false
+					url = ""
+				}
+				else url += c
+			}
 			// Check italic/bold
-			if(c == "*") {
+			else if(c == "*") {
 				// bold
 				if(token[i+1] == "*") {
 					tokenResult += bold ? "</b>" : "<b>"
 					bold = !bold
-					skip = true
+					skip += 1
 				}
 				// italic
 				else {
@@ -82,12 +101,24 @@ function interpret(input) {
 				if(token[i+1] == "_") {
 					tokenResult += strike ? "</s>" : "<s>"
 					strike = !strike
-					skip = true
+					skip += 1
 				}
 				// underline
 				else {
 					tokenResult += underline ? "</u>" : "<u>"
 					underline = !underline
+				}
+			}
+			// Check links
+			else if(c == "[") {
+				tokenResult += `<a href='${patchIdentifier}' target='_blank'>`
+				link = true
+			} else if(c == "]" && link) {
+				tokenResult += "</a>"
+				if(token[i+1] == "(") {
+					processingUrl = true
+					link = false
+					skip += 1
 				}
 			}
 			// Everything else

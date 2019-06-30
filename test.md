@@ -24,3 +24,5 @@ Par**tially bo***ld and itali*c.
 - *Cool!*
 
 I can also include <b>custom HTML in here of course</b>.
+
+A [link to *devdude.me*](https://devdude.me).
