@@ -1,0 +1,23 @@
+{
+  "name": "md_to_html",
+  "version": "1.0.0",
+  "description": "A pet project implementing a Markdown to HTML in Javascript (or Typescript).",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevdudeSami/md_to_html.git"
+  },
+  "author": "Youssef Moawad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DevdudeSami/md_to_html/issues"
+  },
+  "homepage": "https://github.com/DevdudeSami/md_to_html#readme",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "jest": "^24.8.0"
+  }
+}
